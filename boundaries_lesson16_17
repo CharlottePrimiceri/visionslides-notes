@@ -1,0 +1,47 @@
+defining boundaries:
+#https://medium.com/data-breach/introduction-to-sift-scale-invariant-feature-transform-65d7f3a72d40
+
+
+lesson 16:
+DIFFERENCE BETWEEN BOUNDING BOX REGRESSION LOSS OF THE ROL POOLING AND THE ONE OF THE RPN
+In the RPN, the bounding box regression loss is computed between the predicted bounding box offsets and the ground-truth bounding box coordinates associated with the positive anchors. The loss function used for bounding box regression in the RPN is typically the smooth L1 loss.
+
+In the RoI pooling layer of the Fast R-CNN network, the bounding box regression loss is also computed between the predicted bounding box offsets and the ground-truth bounding box coordinates associated with each proposal. The loss function used for bounding box regression in the RoI pooling layer is also typically the smooth L1 loss.
+
+However, there are some important differences in how the bounding box regression loss is computed in the RPN and the RoI pooling layer:
+
+    The RPN computes the bounding box regression loss for all anchor boxes, both positive and negative. In contrast, the RoI pooling layer only computes the bounding box regression loss for the positive proposals that have been selected by the RPN.
+
+    The RPN predicts bounding box offsets relative to each anchor box, while the RoI pooling layer predicts bounding box offsets relative to each proposal. This means that the RoI pooling layer has access to more accurate and localized information about the object, since each proposal corresponds to a specific object instance.
+
+    The RPN and the RoI pooling layer use different ground-truth bounding box coordinates to compute the regression loss. In the RPN, the ground-truth bounding box coordinates are the coordinates of the closest positive anchor box to each object. In the RoI pooling layer, the ground-truth bounding box coordinates are the coordinates of the ground-truth bounding box associated with each proposal.
+
+Overall, the main difference between the two losses is that the RoI pooling layer predicts more accurate and localized bounding box offsets relative to each proposal, whereas the RPN predicts bounding box offsets relative to each anchor box. Additionally, the RoI pooling layer only computes the loss for the positive proposals selected by the RPN, while the RPN computes the loss for all anchor boxes.
+
+
+lesson 17:
+U-NET
+U-Net is a popular convolutional neural network (CNN) architecture for image segmentation, which was introduced by Ronneberger et al. in 2015. U-Net is particularly well-suited for biomedical image segmentation, where it has achieved state-of-the-art results on a variety of tasks.
+
+The architecture of U-Net consists of an encoder network and a decoder network, which are connected by a series of skip connections. The encoder network is similar to a typical CNN architecture and consists of a series of convolutional layers, with each layer followed by a rectified linear activation function (ReLU) and a max pooling operation. The encoder network is used to capture high-level features and spatial information from the input image.
+
+The decoder network is designed to reconstruct the segmentation mask from the encoded features. It consists of a series of convolutional layers, with each layer followed by a ReLU activation function and an upsampling operation. The upsampling operation increases the spatial resolution of the feature maps, while the skip connections connect corresponding layers in the encoder and decoder networks. These skip connections allow the decoder network to reuse the spatial information and high-level features captured by the encoder network.
+
+The final layer of the decoder network produces a segmentation mask that has the same spatial dimensions as the input image. The segmentation mask is produced using a convolutional layer with a sigmoid activation function, which outputs a probability value between 0 and 1 for each pixel in the image. The probability value indicates the likelihood that the corresponding pixel belongs to
+the target object.
+
+During training, U-Net is typically trained using a binary cross-entropy loss function, which compares the predicted segmentation mask to the ground-truth mask. U-Net can also be extended to handle multi-class segmentation tasks by modifying the final layer of the network to output multiple probability maps, one for each class.
+
+In summary, U-Net uses an encoder-decoder architecture with skip connections to capture spatial information and high-level features from the input image, and to produce an accurate segmentation mask for each object instance in the image. 
+
+
+The contraction and expansion phases refer to the two main parts of the U-Net architecture, which is a type of encoder-decoder neural network used for image segmentation.
+
+The contraction phase, also called the encoding or downsampling phase, is the first part of the network and consists of a series of convolutional and pooling layers. The purpose of the contraction phase is to reduce the spatial resolution of the input image and extract high-level features that capture the local and global context of the image. The resulting feature maps have smaller spatial dimensions and larger channel dimensions than the input image.
+
+The expansion phase, also called the decoding or upsampling phase, is the second part of the network and consists of a series of transposed convolutional layers and concatenation operations with the corresponding feature maps from the contraction phase. The purpose of the expansion phase is to increase the spatial resolution of the feature maps and refine the segmentation mask. The resulting feature maps have larger spatial dimensions and smaller channel dimensions than the feature maps from the contraction phase, and are concatenated with the corresponding feature maps from the contraction phase to preserve the spatial information and low-level features of the input image.
+
+Together, the contraction and expansion phases form a symmetric U-shaped architecture that allows the network to capture both local and global context of the input image, while preserving the spatial information of the input image. This makes U-Net well-suited for image segmentation tasks, where accurate segmentation masks require both local and global context information.
+
+
+By using skip connections, U-Net is able to combine both the low-level and high-level features of the input image. The low-level features, such as edges and corners, are typically lost during the downsampling process in the encoder network. However, these features are crucial for accurate segmentation, and the skip connections allow the decoder network to recover them. The high-level features, such as semantic information, captured by the encoder network are also important for accurate segmentation and are reused by the decoder network via the skip connections.

@@ -1,0 +1,39 @@
+Edge detection, image stitching and image pyramids
+Blob Detection 1D
+We can have different shapes of blobs that are our f(x). Then we have our gaussians which sigma is very important to explore the scale space associated to the image that is the different resolutions associated to an image. Then we compute the second derivative of the gaussian and then convolve it with a blob: if the blob was wide then the zero crossing are well separeted otherwise they overlap. The response of this operator will depend on the sigma: for wider sigma, the peak will decrease and so the responde will be reduced. So we have to change sigma in order to find blob at different resolution.So to fix this problem we will multiply the operator with sigma squared so we'll have the sigma normalized output. If we increase the sigma of the Gaussian we can find a clearer peak that is the center of the blob in the sigma normalized output. We'll use different blobs so we'll have a stack of images withdifferent scale that corresponds to different value of sigma. This is described with two parametersx for spatial coordinate and y for scale, and we'll find local extrema in this x sigma space and the x where the extremas lie corrrespond to the location of the blob and the sigma where there are extrema correspond to the scale of the blob. The characteristic scale(sigma) is proportional to the size of blob. We found these two parameters computing the argmax of the operator. 
+Blob Detection 2D
+Here the second derivative of the gaussian is the laplacian of the gaussian(LoG) and we have to normalized it so we'll have NLoG. So we apply the NLog filters to the 2D image with multiple sigma values and then we'll have a volume which is our stack: the x and y are spatial coordinates and sigma. Also there we can find extremas.
+Scale-Space
+Increasing sigma is increasing scale and so lower resolution. Now we take a point in all the images in the stack of images with different resolution. Then we find where is this point in the cartesian space where the sigma normalized output is the y and the different sigma are the x. we can se by this space which is the extrema, so our sigma corresponding to that is our characteristic scale. There could be point with no blobs. 
+
+SIFT ChatGpt
+In the context of the Scale-Invariant Feature Transform (SIFT) algorithm, detectors and descriptors refer to two key components of the feature extraction process. The combination of the detector and descriptor allows SIFT to robustly detect and describe key points in an image that are invariant to scale, rotation, and illumination changes. 
+
+Detectors are algorithms used to detect key points or interest points in an image. In SIFT, a Difference of Gaussian (DoG) detector is used to identify key points at different scales and orientations. The DoG detector works by computing the difference of two Gaussian blurred images, with different levels of smoothing. Local maxima and minima in the resulting scale-space representation are then identified as key points.
+
+Descriptors are a way to describe the local features around each key point detected by the detector. In SIFT, a 128-dimensional vector is computed for each key point, which captures the orientation and gradient magnitude of the surrounding image patches. The descriptor is computed by dividing the region around the key point into smaller subregions, and computing the gradient orientation histogram within each subregion. The resulting histograms are then concatenated to form the final descriptor.
+
+https://www.youtube.com/watch?v=ram-jbLJjFg
+SIFT DETECTOR
+The DoG is just a scaled version of the normalized NLoG, better rather than compute NLoG. Once we do the difference then we pass through the images in output a window until we find all the local extremas that are candidates for SIFT features at many different scales. But there are many of this because we haven't cleaned things up, so we do a thresholding scheme to remove all the weak ones. each point correspond to a blob.                                                                  We have scale invariance so we can remove the effect of scale once we have detected one of these interest points.                                                                                  We need to remove the effect of orientation as well. We place a grid in the blob and for every pixel we compute the gradient to have the magnitude and orientation of the edge. Magnitude is sensitive to lighting. we compute the histogram of gradient directions, the peak of it is the principal orientation.
+SIFT DESCRIPTOR
+Now that we now how to undo the effect of scale and orientation and the size of the image, we want to know how to match one features with others. The descriptor is a 4x4 histogram array that we find from the blob.
+MATCHING
+There are different metrics to compare two descriptors. 
+
+https://medium.com/data-breach/introduction-to-sift-scale-invariant-feature-transform-65d7f3a72d40
+
+
+IMAGE STITCHING https://www.youtube.com/watch?v=l_qjO4cM74o&list=PL2zRqk16wsdp8KbDfHKvPYNGF2L-zQASc&index=4
+We want to compute the homography matrix that would allow us to align two images and put them on the same coordinate frame. The problem by dealing with this kind of problem with SIFT is that there are also outliers so false matches, so we'll use RANSAC with Homography (in general because of composition we can relate also two images not taken from the same camera). before computing homography we can't tell if one point matches correctly, so when they do not correspond to the same point in 3D.
+
+
+
+
+
+
+
+
+
+
+
